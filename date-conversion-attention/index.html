@@ -1,0 +1,172 @@
+<!--
+Copyright 2018 Google LLC. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================
+-->
+
+<!doctype html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" contlent="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../shared/tfjs-examples.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis"></script>
+  <script type="module" src="index.js"></script>
+  <title>TensorFlow.js 예제: 어텐션을 사용한 날짜 변환</title>
+</head>
+<style>
+  .horizontal-sections {
+    display: inline-block;
+    vertical-align: top;
+  }
+  .date-label {
+    font-size: 18px;
+    font-family: monospace;
+    padding: 5px;
+    width: 300px;
+    display: block;
+  }
+  .hint {
+    font-size: 12px;
+    font-family: monospace;
+  }
+  .dates {
+    font-size: 24px;
+    font-family: monospace;
+  }
+  .date-input-output-section {
+    display: inline-block;
+  }
+  .attention-section {
+    margin-top: 8px;
+  }
+  #attention-heatmap {
+    width: 600px;
+    height: 360px;
+    border: 2px solid lightblue
+  }
+  #date-format-table {
+    font-size: 15px;
+    font-family: monospace;
+    text-align: left;
+  }
+  li {
+    padding-top: 1px;
+    padding-bottom: 2px;
+    text-decoration: underline;
+    color: blue;
+  }
+  #random-date {
+    margin-top: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .benchmark {
+    color: gray;
+  }
+</style>
+
+<body>
+  <div class='tfjs-example-container centered-container'>
+    <section class='title-area'>
+      <h1>TensorFlow.js 예제: 날짜 문자열 변환</h1>
+      <p class='subtitle'>LSTM과 어텐션을 사용하여 시퀀스-투-시퀀스 작업 해결하기</p>
+    </section>
+    <section>
+      <p class='section-head'>설명</p>
+      <p>
+        이 예제는 시퀀스-투-시퀀스 모델을 사용해 여러가지 날짜 포맷을
+        <a href="https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates" target="_blank">ISO 8601 날짜 포맷</a>(즉, YYYY-MM-DD)으로
+        바꾸는 추론 단계를 시연합니다. 지원하는 입력 날짜 포맷은 아래에 나오는 것과 같습니다.
+      </p>
+
+      <p>
+        이 모델은
+        <a href="https://js.tensorflow.org/api/latest/#layers.lstm" target="_blank">LSTM</a>과
+        <a href="https://medium.com/syncedreview/a-brief-overview-of-attention-mechanism-13c578ba9129" target="_blank">
+          어텐션 메커니즘
+        </a>을 기반으로 합니다.
+      </p>
+
+      <p>
+        <a href="https://github.com/tensorflow/tfjs-node">tfjs-node</a>를 사용해
+        Node.js 환경에서 훈련이 수행됩니다. 훈련 스크립트는
+        <a href="https://github.com/rickiepark/deep-learning-with-javascript/tree/master/date-conversion-attention/train.js">
+        에서 찾을 수 있습니다.
+        </a>.
+      </p>
+    </section>
+    <section>
+      <p class='section-head'>상태</p>
+      <p>
+        <span id="status"></span>
+      </p>
+    </section>
+    <section>
+      <p class='section-head'>지원하는 날짜 포맷</p>
+      <p>
+        <div id="date-format-table">
+          <div>지원하는 포맷의 예시 (클릭해서 테스트해 보세요):</div>
+          <ul>
+            <li><span class="input-date-example">23Jan2015</span></li>
+            <li><span class="input-date-example">012315</span></li>
+            <li><span class="input-date-example">01/23/15</span></li>
+            <li><span class="input-date-example">1/23/15</span></li>
+            <li><span class="input-date-example">01/23/2015</span></li>
+            <li><span class="input-date-example">1/23/2015</span></li>
+            <li><span class="input-date-example">23-01-2015</span></li>
+            <li><span class="input-date-example">23-1-2015</span></li>
+            <li><span class="input-date-example">JAN 23, 15</span></li>
+            <li><span class="input-date-example">Jan 23, 2015</span></li>
+            <li><span class="input-date-example">23.01.2015</span></li>
+            <li><span class="input-date-example">23.1.2015</span></li>
+            <li><span class="input-date-example">2015.01.23</span></li>
+            <li><span class="input-date-example">2015.1.23</span></li>
+            <li><span class="input-date-example">20150123</span></li>
+            <li><span class="input-date-example">2015/01/23</span></li>
+            <li><span class="input-date-example">2015-01-23</span></li>
+            <li><span class="input-date-example">2015-1-23</span></li>
+            <li><span class="input-date-example">23 JAN 2015</span></li>
+          </ul>
+        </table>
+      </p>
+    </section>
+
+    <div class="horizontal-sections">
+      <div class="horizontal-sections">
+        <div class="date-input-output-section">
+          <div class="date-label">입력 날짜 문자열:</div>
+          <input type="text" class="dates" id="input-date-string" value="JAN 20, 2001"></input>
+        </div>
+
+        <div class="hint">문자열을 변환하려면 엔터를 입력하세요</div>
+        <button id="random-date">날짜 문자열 랜덤 선택</button>
+      </div>
+
+      <div class="horizontal-sections">
+        <div class="date-input-output-section">
+          <div class="date-label">출력 날짜 문자열:</div>
+          <input type="text" class="dates" id="output-date-string" disabled="true"></input>
+        </div>
+
+        <div class="attention-section">
+          <div class="date-label">어텐션 행렬:</div>
+          <div id="attention-heatmap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>

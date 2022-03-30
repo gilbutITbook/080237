@@ -1,0 +1,90 @@
+<!--
+Copyright 2018 Google LLC. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================
+-->
+
+<!doctype html>
+
+<head>
+  <title>TensorFlow.js 예제: 사전 훈련된 MobileNet 사용하기</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../shared/tfjs-examples.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+  <script type="module" src="index.js"></script>
+</head>
+
+<style>
+  .pred-container {
+    margin-bottom: 20px;
+  }
+
+  .pred-container > div {
+    display: inline-block;
+    margin-right: 20px;
+    vertical-align: top;
+  }
+
+  .row {
+    display: table-row;
+  }
+  .cell {
+    display: table-cell;
+    padding-right: 20px;
+  }
+
+  #file-container {
+    margin-bottom: 20px;
+  }
+</style>
+
+<body>
+  <div class="tfjs-example-container">
+    <section class='title-area'>
+      <h1>TensorFlow.js 예제: 사전 훈련된 MobileNet 사용하기</h1>
+    </section>
+
+    <section>
+      <p class='section-head'>설명</p>
+      <p>
+        이 데모는 케라스에서 사전 훈련된 MobileNet_25_224 모델을 사용합니다.
+        이 모델은 <a href="https://github.com/fchollet/deep-learning-models/releases/download/v0.6/mobilenet_2_5_224_tf.h5">여기</a>에서 다운로드할 수 있습니다.
+
+        이 모델은 사람의 얼굴을 인식하도록 훈련되지 않았습니다.
+        가장 좋은 성능을 얻으려면 피아노, 커피 머그, 병 같은 물체 이미지를 업로드하세요.
+        <a href="https://github.com/tensorflow/tfjs-examples/blob/master/mobilenet/imagenet_classes.js">imagenet_classes.js</a>에서
+        훈련에 사용한 물체를 모두 볼 수 있습니다.
+      </p>
+    </section>
+
+    <section>
+      <p class='section-head'>상태</p>
+      <div id="status"></div>
+    </section>
+
+    <section>
+      <p class='section-head'>모델 출력</p>
+
+      <div id="file-container" style="display: none">
+        이미지 업로드하기: <input type="file" id="files" name="files[]" multiple />
+      </div>
+
+      <div id="predictions"></div>
+
+      <img style="display: none" id="cat" src="cat.jpg" width=224 height=224 />
+    </section>
+
+  </div>
+</body>

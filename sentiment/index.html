@@ -1,0 +1,107 @@
+<!--
+Copyright 2018 Google LLC. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================
+-->
+
+<!doctype html>
+
+<head>
+  <title>TensorFlow.js 예제: 감성 분석</title>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../shared/tfjs-examples.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+  <script type="module" src="index.js"></script>
+
+  <style>
+    #review-text {
+      font-size: 120%;
+      width: 60%;
+      height: 200px;
+    }
+
+    select {
+      display: block;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="tfjs-example-container centered-container">
+    <section class='title-area'>
+      <h1>TensorFlow.js 예제: 감성 분석</h1>
+    </section>
+
+    <section>
+      <p class='section-head'>설명</p>
+
+      <p>
+        이 예제는 브라우저에서 사전 훈련된 모델을 로딩하여 사용합니다. 이 모델은 짧은 영화 리뷰의 감성을 (0과 1 사이로) 예측하도록 훈련되었습니다.
+        파이썬을 사용하여 서버 사이드에서 훈련되었고 TensorFlow.js 모델로 변환되었습니다.
+      </p>
+      <p>
+        이 모델은 최대 500개의 단어가 되도록 잘리거나 패딩된 IMDb 리뷰와
+        리뷰에 가장 많이 등장하는 20,000개 단어만을 사용하여 훈련되었습니다.
+        이 페이지에서 이 모델을 실험하거나
+        <a href="https://github.com/tensorflow/tfjs-examples/tree/master/sentiment/">깃허브 저장소</a>의
+        코드를 사용해 자신만의 모델을 훈련하여 실험해 볼 수 있습니다.
+      </p>
+      <p>제품 수준의 감성 분석 모델을 만드는 예제는 아닙니다.</p>
+    </section>
+
+    <section>
+      <p class='section-head'>모델 로딩</p>
+
+      <div class="create-model">
+        <button id="load-pretrained-remote" style="display:none">사전 훈련된 원격 모델 로드하기</button>
+        <button id="load-pretrained-local" style="display:none">사전 훈련된 로컬 모델 로드하기</button>
+      </div>
+
+      <div>
+        <div>
+          <span>모델 종류: </span>
+          <span id="modelType"></span>
+        </div>
+        <div>
+          <span>어휘 사전 크기: </span>
+          <span id="vocabularySize"></span>
+        </div>
+        <div>
+          <span>최대 길이: </span>
+          <span id="maxLen"></span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <p class='section-head'>입력 샘플</p>
+
+      <select id="test-example-select" class="form-control">
+        <option value="positive">긍정적인 샘플</option>
+        <option value="negative">부정적인 샘플</option>
+      </select>
+      <textarea id="review-text"></textarea>
+    </section>
+
+    <section>
+      <p class='section-head'>상태</p>
+      <span id="status">대기중</span>
+    </section>
+
+  </div>
+
+</body>

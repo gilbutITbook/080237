@@ -1,0 +1,110 @@
+<!--
+Copyright 2018 Google LLC. All Rights Reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================
+-->
+
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>TensorFlow.js 예제: 변이형 오토인코더</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../shared/tfjs-examples.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-selection@3"></script>
+  <script type="module" src="index.js"></script>
+
+  <style>
+    .plot-area {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input {
+      max-width: 80px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class='tfjs-example-container centered-container'>
+    <section class='title-area'>
+      <h1>TensorFlow.js 예제: 변이형 오토인코더 (VAE)</h1>
+      <p class='subtitle'>VAE 모델을 훈련하여 이미지를 생성합니다.</p>
+    </section>
+    <section>
+      <p class='section-head'>설명</p>
+      <p>
+        이 예제는
+        <a href="https://blog.keras.io/building-autoencoders-in-keras.html">
+          변이형 오토인코더</a>를 훈련하여
+        <a href="https://github.com/zalandoresearch/fashion-mnist">fashion MNIST</a>
+        데이터셋에 있는 샘플과 닮은 이미지를 생성합니다.
+      </p>
+
+      <p>
+        이 예제는 Node.js에서 모델을 훈련합니다. 자세한 내용은 README.md 파일을 참고하세요.
+        이 페이지는 훈련된 모델을 사용해 이미지를 생성합니다.
+      </p>
+
+      <p>
+        이 예제는 오토인코더의 잠재 공간이 2D라고 가정합니다.
+      </p>
+
+    </section>
+
+    <div>
+      <section>
+        <p class='section-head'>설명</p>
+        <p>
+          격자에 있는 이미지 개수와 이미지를 생성하기 위해 사용되는 시작값과 종료 값을 수정할 수 있습니다.
+          오토인코더가 생성할 수 있는 범위를 확인해 보세요.
+        </p>
+      </section>
+
+      <section>
+        <p class='section-head'>조정</p>
+
+        <div>
+          <label for="">차원별 포인트 수</label>
+          <input id="pointsPerDim" type="number" value=30>
+          <label for="">시작값</label>
+          <input id="start" type="number" value=-4>
+          <label for="">종료값</label>
+          <input id="end" type="number" value=4>
+
+          <button id="update">업데이트</button>
+        </div>
+      </section>
+
+      <section>
+        <p class='section-head'>결과</p>
+        <div id="plot-area" class="plot-area">
+        </div>
+      </section>
+    </div>
+  </div>
+
+</body>
+
+</html>

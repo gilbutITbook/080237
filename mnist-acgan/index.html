@@ -1,0 +1,101 @@
+<!--
+Copyright 2018 Google LLC. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================
+-->
+
+<!doctype html>
+<head>
+  <title>TensorFlow.js 예제: 생성적 적대 신경망(GAN)</title>
+  <link rel="stylesheet" href="../shared/tfjs-examples.css" />
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis"></script>
+  <script type="module" src="index.js"></script>
+</head>
+
+<body>
+  <div class="tfjs-example-container centered-container">
+    <section class='title-area'>
+      <h1>TensorFlow.js 예제: 생성적 적대 신경망(GAN)</h1>
+      <p class='subtitle'>브라우저에서 ACGAN의 생성자를 시연합니다.</p>
+    </section>
+
+    <p class='section-head'>설명</p>
+      <p>
+        <a href="https://arxiv.org/abs/1610.09585" target="_blank">ACGAN</a>
+        TensorFlow.js 예제의 웹 데모입니다.
+      </p>
+      <p>
+        훈련 코드는 <a href="https://github.com/rickiepark/deep-learning-with-javascript/blob/main/mnist-acgan/gan.js">gan.js</a>에
+        있으며 tfjs-node나 tfjs-node-gpu를 사용해 Node.js에서 실행됩니다.
+        이 웹 페이지에서는 사전 훈련된 ACGAN의 생성자를 로드하여 MNIST 이미지를 생성합니다.
+        생성된 MNIST 이미지가 얼마나 진짜 같을지는 얼마나 모델을 잘 훈련했는지에 달려 있습니다.
+        5 에포크 동안 훈련하면 꽤 괜찮은 이미지를 볼 수 있습니다.
+        15 에포크 이후에는 좋은 이미지가 출력되기 시작합니다.
+        (진짜 이미지와 구분하기 어려운) 완벽에 가까운 이미지는 100 에포크 동안 훈련한 후에 나타납니다.
+      </p>
+      <p>
+        ACGAN은
+        <a href="https://en.wikipedia.org/wiki/Generative_adversarial_network" target="_blank">GAN</a>의
+        한 종류로 다음과 같이 구성됩니다.
+          <ul>
+            <li>
+              <strong>판별자</strong>: 진짜 MNIST 이미지와 가짜 MNIST 이미지를 구별하도록 훈련됩니다.
+              또한 ACGAN의 판별자는 MNIST 이미지를 10개의 숫자 카테고리로 분류하도록 훈련됩니다.
+            </li>
+            <li>
+              <strong>생성자</strong>: 진짜 같은 MNIST 이미지르 생성하여 판별자를 속이도록 훈련됩니다.
+              판별자는 두 개의 입력을 받습니다:
+              <ol>
+                <li>
+                  고정 길이의 잠재 벡터. 가짜 생성 과정을 위한 랜덤한 초깃값으로 볼 수 있습니다.
+                </li>
+                <li>
+                  [0, 10) 사이의 정수. 원하는 수자 카테고리를 나타냅니다.
+                </li>
+              </ol>
+              이런 두 개의 입력을 사용해 가짜 MNIST 이미지를 만듭니다.
+            </li>
+          </ul>
+      </p>
+    </p>
+
+    <div id="status">모델 로딩 중...</div>
+    <button id="load-hosted-model">원격 모델 로드하기</button>
+    <button id="test" disabled="true">이미지 생성</button>
+
+    <div>
+      <div>
+        <div>
+          <span id="fake-images-span">가짜 이미지 (클래스마다 1개 샘플)</span>
+        </div>
+        <div>
+          <button id="toggle-sliders" disabled="true">z-벡터 슬라이더 보기</button>
+          <div id="sliders-container"></div>
+        </div>
+
+        <canvas id="fake-canvas" width="280" height="28"></canvas>
+      </div>
+      <div>
+        <div>
+          <span>비교를 위한 진짜 이미지 (클래스마다 10개 샘플)</span>
+        </div>
+        <canvas id="real-canvas" width="280" height="280"></canvas>
+      </div>
+    </div>
+
+    <div>
+  </div>
+</body>
