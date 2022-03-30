@@ -4,7 +4,7 @@
 
 이 저장소는 <[구글 브레인 팀에게 배우는 딥러닝 with TensorFlow.js](https://bit.ly/tfjs-book)>(길벗, 2022)의 코드를 담고 있습니다. 온라인 [데모 사이트](https://bit.ly/tfjs-demo)에서 예제를 직접 실행해 볼 수도 있습니다!
 
-* 최신 버전의 예제 파일은 역자 깃허브를 참고하세요.
+* 최신 버전의 예제 파일은 역자 깃허브를 참고하세요. </br>
 https://github.com/rickiepark/deep-learning-with-javascript
 
 * 2장: [보스턴 주택 가격 예측](boston-housing)
